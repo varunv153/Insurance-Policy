@@ -1,9 +1,10 @@
 //importing modules
-var express = require('express');
-var bodyParser =require('body-parser');
-//var models = require('./models.js')
+const express = require('express');
+const bodyParser =require('body-parser');
+const bcrypt = require('bcrypt');
 const { Sequelize, DataTypes } = require('sequelize');
-
+const jwt = require('jsonwebtoken');
+const cookieParser =require('cookie-parser');
 
 
 
@@ -44,27 +45,32 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  salt:{
+  	type: DataTypes.STRING(1000),
+    allowNull: false
   }
 }, {
   timestamps: false
 });
-
-console.log( (User === sequelize.models.User)?'User model created':'User model not created' ); // true
-
+//check if database is synced
 (async()=>
 {
-	await User.sync();
+	await User.sync({ force: true });
 	console.log("User database synced");
 })();
+//add a row to the user table
 async function save_row(req,res,next)
 {
 	try
 	{
-		await User.build(req.body).save();
+		req.body.salt = await bcrypt.genSalt();
+		req.body.password = await bcrypt.hash(req.body.password, req.body.salt);
+		await User.create(req.body);
 		console.log('User was saved to the database!');
 	}
 	catch(err){
-		console.log("error");
+		console.log("err");
 	}
 	next();
 };
@@ -74,7 +80,22 @@ async function save_row(req,res,next)
 app.post('/signup',save_row,(req,res)=>{
 	res.send(req.body);
 })
+app.get('/restricted',(req,res)=>{
+	res.send("welcome to the restricted zone");
+})
+app.post('/login',async (req,res)=>{
+	var valid_user = await User.findByPk(req.body.email);
+	if (valid_user != null) {
+		const auth = await bcrypt.compare(req.body.password, valid_user.password);
+		if (auth) {
+			res.redirect('.restricted');
+		}
+		res.send('incorrect password');
+	}
+	else{
+		res.send("This user does not exist");
+	}
+});
 app.listen(port,(req,res)=>{
 	console.log("Listening on port:",port);
-	//check_database_working();
 })
