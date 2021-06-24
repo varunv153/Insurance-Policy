@@ -56,16 +56,22 @@ console.log( (User === sequelize.models.User)?'User model created':'User model n
 	await User.sync();
 	console.log("User database synced");
 })();
-async function save_row()
+async function save_row(req,res,next)
 {
-	const jane = User.build({ email: "Varun", password:"Jana"});
-	await jane.save();
-	console.log('Jane was saved to the database!');
+	try
+	{
+		await User.build(req.body).save();
+		console.log('User was saved to the database!');
+	}
+	catch(err){
+		console.log("error");
+	}
+	next();
 };
 
 
 //routes
-app.post('/signup',(req,res)=>{
+app.post('/signup',save_row,(req,res)=>{
 	res.send(req.body);
 })
 app.listen(port,(req,res)=>{
