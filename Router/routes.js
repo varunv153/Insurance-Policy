@@ -1,0 +1,18 @@
+const express = require('express');
+const controller = require('../Controllers/controller.js')
+const middleware = require('../Middlewares/middleware.js');
+const router = express.Router();
+
+router.use(middleware);
+
+
+router.post('/signup',controller.save_row,(req,res)=>{
+	res.send(req.body);
+})
+
+router.get('/restricted',(req,res)=>{
+	res.send("welcome to the restricted zone");
+})
+router.post('/login',controller.login_post);
+
+module.exports = router;
