@@ -10,7 +10,9 @@ router.post('/signup',controller.signup_user,(req,res)=>{
 	res.send(req.body);
 })
 router.post('/login',controller.login_post);
-router.get('/restricted',controller.authorise);
 router.get('/logout', controller.logout);
+
+router.post('/createpolicy',controller.authorise,controller.createpolicy);
+router.get('/policies', controller.authorise, controller.viewpolicies);
 
 module.exports = router;

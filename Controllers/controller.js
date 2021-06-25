@@ -14,7 +14,7 @@ async function signup_user(req,res,next)
 		req.body.password = await bcrypt.hash(req.body.password, req.body.salt);
 		await models.User.create(req.body);
 		console.log('User was saved to the database!');
-		await models.Company.create({CompanyGSTIN:req.body.PhoneNo, password:req.body.password,salt:req.body.salt,CompanyName:req.body.Name});
+		await models.Company.create({CompanyGSTIN:req.body.email, password:req.body.password,salt:req.body.salt,CompanyName:req.body.Name});
 		console.log('Company was saved to the database!');
 	}
 	catch(err){
@@ -30,7 +30,7 @@ async function login_post(req,res)
 		if (auth) {
 			const jwt_token =jwt.sign(req.body.email, 'varun secret jwt key');
 			res.cookie('jwt', jwt_token);
-			res.redirect('/restricted');
+			res.send('You are logged in');
 		}
 		else{
 			res.send('incorrect password');
@@ -40,7 +40,7 @@ async function login_post(req,res)
 		res.send("This user does not exist");
 	}
 };
-async function authorise(req,res)
+async function authorise(req,res,next)
 {
 	if (req.cookies.jwt)
 	{
@@ -49,7 +49,7 @@ async function authorise(req,res)
 				res.send('Not Authorised');
 			}
 			else {
-				res.send("welcome to the restricted zone")
+				next();
 			}
 		});
 	}
@@ -63,6 +63,22 @@ async function logout(req,res)
 	res.send('Logged out');
 };
 
+async function createpolicy(req,res)
+{
+	try
+	{
+		req.body.CompanyGSTIN = await jwt.decode(req.cookies.jwt);
+		await models.Policy.create(req.body);
+		res.send('Policy was saved to the database!');
+	}
+	catch(err){
+		console.log('Error in creating policy');
+	}
+};
+async function viewpolicies(req,res)
+{
+	res.send( await models.Policy.findAll() );
+};
 
-module.exports = {signup_user, login_post,authorise, logout};
+module.exports = {signup_user, login_post,authorise, logout, createpolicy, viewpolicies};
 
