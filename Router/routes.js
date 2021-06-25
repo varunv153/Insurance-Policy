@@ -13,6 +13,7 @@ router.post('/login',controller.login_post);
 router.get('/logout', controller.logout);
 
 router.post('/createpolicy',controller.authorise,controller.createpolicy);
+router.post('/buy', controller.authorise, controller.buypolicy);
 router.get('/policies', controller.authorise, controller.viewpolicies);
 
 module.exports = router;

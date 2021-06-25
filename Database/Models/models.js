@@ -106,8 +106,12 @@ const PurchasedPolicy = sequelize.define('PurchasedPolicy', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  PolicyHolderDOB:{
-    type: DataTypes.DATEONLY,
+  PolicyHolderAGE:{
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  PolicyAge:{
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   PreExistingDiseases:{

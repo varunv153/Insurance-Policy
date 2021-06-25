@@ -79,6 +79,18 @@ async function viewpolicies(req,res)
 {
 	res.send( await models.Policy.findAll() );
 };
+async function buypolicy(req,res)
+{
+	try
+	{
+		req.body.UserEmail = await jwt.decode(req.cookies.jwt);
+		req.body.Premium = req.body.PolicyHolderAGE*1000*req.body.PolicyAge;
+		await models.PurchasedPolicy.create(req.body);
+		res.send('Policy bought!');
+	}
+	catch(err){
+		console.log(err);
+	}
+};
 
-module.exports = {signup_user, login_post,authorise, logout, createpolicy, viewpolicies};
-
+module.exports = {signup_user, login_post,authorise, logout, createpolicy, viewpolicies, buypolicy};
