@@ -6,7 +6,7 @@ const models = require('../Database/Models/models.js');
 var app = express();
 
 //add a row to the user table when sign up
-async function save_row(req,res,next)
+async function signup_user(req,res,next)
 {
 	try
 	{
@@ -14,9 +14,11 @@ async function save_row(req,res,next)
 		req.body.password = await bcrypt.hash(req.body.password, req.body.salt);
 		await models.User.create(req.body);
 		console.log('User was saved to the database!');
+		await models.Company.create({CompanyGSTIN:req.body.PhoneNo, password:req.body.password,salt:req.body.salt,CompanyName:req.body.Name});
+		console.log('Company was saved to the database!');
 	}
 	catch(err){
-		console.log('err');
+		console.log('Error in signing up');
 	}
 	next();
 };
@@ -62,5 +64,5 @@ async function logout(req,res)
 };
 
 
-module.exports = {save_row, login_post,authorise, logout};
+module.exports = {signup_user, login_post,authorise, logout};
 

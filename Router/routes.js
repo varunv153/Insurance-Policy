@@ -6,7 +6,7 @@ const router = express.Router();
 router.use(middleware);
 
 
-router.post('/signup',controller.save_row,(req,res)=>{
+router.post('/signup',controller.signup_user,(req,res)=>{
 	res.send(req.body);
 })
 router.post('/login',controller.login_post);

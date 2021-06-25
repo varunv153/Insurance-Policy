@@ -33,16 +33,16 @@ const Company = sequelize.define('Company', {
     type: DataTypes.STRING,
     primaryKey: true
   },
+  CompanyName:{
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   password: {
     type: DataTypes.STRING,
     allowNull: false
   },
   salt:{
     type: DataTypes.STRING(1000),
-    allowNull: false
-  },
-  CompanyName:{
-    type: DataTypes.STRING,
     allowNull: false
   }
 }, {
@@ -133,4 +133,4 @@ const PurchasedPolicy = sequelize.define('PurchasedPolicy', {
   console.log("All models were synchronized successfully.");
 })();
 
-module.exports = {User};
+module.exports = {User, Company, Policy, PurchasedPolicy};
