@@ -16,7 +16,7 @@ async function save_row(req,res,next)
 		console.log('User was saved to the database!');
 	}
 	catch(err){
-		console.log("err");
+		console.log('err');
 	}
 	next();
 };

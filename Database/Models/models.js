@@ -20,7 +20,7 @@ const User = sequelize.define('User', {
     allowNull: false
   },
   PhoneNo:{
-    type: DataTypes.BIGINT(10),
+    type: DataTypes.INTEGER(10),
     allowNull: false
   },
 }, {
@@ -71,7 +71,7 @@ const Policy = sequelize.define('Policy', {
   CompanyGSTIN:{
     type: DataTypes.STRING,
     allowNull: false,
-    //references: {model: 'asadasCompany',key: 'CsdfompanyGSTIN'}
+    references: {model: Company ,key: 'CompanyGSTIN'}
   },
   Exemptions:{
     type: DataTypes.TEXT,
@@ -85,10 +85,6 @@ const Policy = sequelize.define('Policy', {
   timestamps: false
 });
 
-
-
-
-
 //purchased policies model
 const PurchasedPolicy = sequelize.define('PurchasedPolicy', {
   BondID: {
@@ -99,12 +95,12 @@ const PurchasedPolicy = sequelize.define('PurchasedPolicy', {
   UserEmail: {
     type: DataTypes.STRING,
     allowNull: false,
-    //references: {model: 'User',key: 'email'}
+    references: {model: User,key: 'email'}
   },
   PolicyID:{
     type: DataTypes.INTEGER,
     allowNull: false,
-    //references: {model: 'Policy',key: 'PolicyID'}
+    references: {model: Policy,key: 'PolicyID'}
   },
   PolicyHolderName:{
     type: DataTypes.STRING,
