@@ -22,8 +22,8 @@ const User = sequelize.define('User', {
 //check if database is synced
 (async()=>
 {
-  await User.sync({ force: true });
-  console.log("User database synced");
+  await sequelize.sync({ force: true });
+  console.log("All models were synchronized successfully.");
 })();
 
 module.exports = {User};

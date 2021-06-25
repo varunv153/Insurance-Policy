@@ -9,10 +9,8 @@ router.use(middleware);
 router.post('/signup',controller.save_row,(req,res)=>{
 	res.send(req.body);
 })
-
-router.get('/restricted',(req,res)=>{
-	res.send("welcome to the restricted zone");
-})
 router.post('/login',controller.login_post);
+router.get('/restricted',controller.authorise);
+router.get('/logout', controller.logout);
 
 module.exports = router;
