@@ -6,14 +6,15 @@ const router = express.Router();
 router.use(middleware);
 
 
-router.post('/signup',controller.signup_user,(req,res)=>{
-	res.send(req.body);
-})
+router.post('/signup',controller.signup_user);
 router.post('/login',controller.login_post);
-router.get('/logout', controller.logout);
+router.get('/logout', controller.authorise, controller.logout);
 
 router.post('/createpolicy',controller.authorise,controller.createpolicy);
 router.post('/buy', controller.authorise, controller.buypolicy);
 router.get('/policies', controller.authorise, controller.viewpolicies);
+
+router.use('*', controller.page_404);
+
 
 module.exports = router;

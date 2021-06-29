@@ -1,0 +1,36 @@
+http://localhost:3000/signup
+{
+    "email": "tesa@a.com",
+    "name" : "varuf   nvenka",
+    "password" : "12345678910",
+    "phoneno" : 9876543210
+}
+
+http://localhost:3000/login
+{
+    "email": "test1@gmail.com",
+    "password": "pass1"
+}
+
+http://localhost:3000/createpolicy
+{
+    "policywording": "This is a policy. Please buy it. These are  the terms and conditions. Read carefully",
+    "roomrentcap": 3000,
+    "suminsured": 300000,
+    "exemptions": "Robotic Surgery",
+    "claim_settlement_ratio": 95.84
+}
+
+
+http://localhost:3000/buy
+{
+    "policyid":1,
+    "policyholdername":"Raj",
+    "policyholderage":18,
+    "policyage":2,
+    "preexistingdiseases": "Cancer, Covid"
+}
+
+http://localhost:3000/policies
+
+http://localhost:3000/logout
