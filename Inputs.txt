@@ -3,7 +3,7 @@ http://localhost:3000/signup
     "email": "tesa@a.com",
     "name" : "varuf   nvenka",
     "password" : "12345678910",
-    "phoneno" : 9876543210
+    "phoneno" : "9876543210"
 }
 
 http://localhost:3000/login
