@@ -198,44 +198,65 @@ async function viewmyclaims(req,res)
 	{
 		res.json({"Error":err});
 	}
-};/*
-async function view_policies_of_company(req,res)
+};
+async function view_policies_of_my_company(req,res)
 {
 	const mypolicies= await
-	models.purchasedpolicy.findAll({
+	models.policy.findAll({
 		where :{
-			useremail : await jwt.decode(req.cookies.jwt)
+			company_adminemail : await jwt.decode(req.cookies.jwt)
 		}
 	});
 	res.json(mypolicies);
 }
-async function approve_claims(req,res)
+async function view_claims_of_my_company(req,res)
 {
-	const mypolicies = await view_policies_of_company();
-
-	const mybonds= await
-	models.purchasedpolicy.findAll({
-		where :{
-			useremail : await jwt.decode(req.cookies.jwt)
-		}
-	});
-
-	const mybondsid =[];
-	for (let i = 0; i < mybonds.length; i++)
-		mybondsid[i] = mybonds[i].id;
-
-	const result = await 
-	models.claim.findAll({
-		where :
-		{
-			bondid : 
-			{
-				[Op.in]:mybondsid
+	try
+	{
+		const mypolicies= await
+		models.policy.findAll({
+			where :{
+				company_adminemail : await jwt.decode(req.cookies.jwt)
 			}
-		}
-	});
-	res.json(result);
-}*/
+		});
+		const mypolicyid =[];
+		for (let i = 0; i < mypolicies.length; i++)
+			mypolicyid[i] = mypolicies[i].id;
+		console.log(mypolicyid);
+
+		const mybonds= await
+		models.purchasedpolicy.findAll({
+			where :
+			{
+				policyid : 
+				{
+					[Op.in]:mypolicyid
+				}
+			}
+		});
+		//res.json(mybonds);
+		const mybondsid =[];
+		for (let i = 0; i < mybonds.length; i++)
+			mybondsid[i] = mybonds[i].id;
+
+		const result = await 
+		models.claim.findAll({
+			where :
+			{
+				bondid : 
+				{
+					[Op.in]:mybondsid
+				}
+			}
+		});
+		res.json(result);
+	}
+	catch(err)
+	{
+		console.log(err);
+		res.send(err);
+	}
+}
 function page_404(req,res)
 {
 	res.status(404).json({ error: 'Enter a valid URL' });
@@ -245,4 +266,5 @@ function page_404(req,res)
 module.exports = {signup_user, signup_company,
 				login_user,login_company,
 				authorise_user, authorise_company,
-				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy,viewmyclaims, page_404};
+				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy,viewmyclaims, 
+				view_policies_of_my_company, view_claims_of_my_company, page_404};

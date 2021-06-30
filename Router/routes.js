@@ -23,6 +23,10 @@ router.get('/policies', controller.viewpolicies);
 router.post('/claimpolicy',controller.authorise_user,controller.claim_my_policy);
 router.get('/viewmyclaims',controller.authorise_user,controller.viewmyclaims);
 
+router.get('/view_policies_of_my_company',controller.authorise_company,controller.view_policies_of_my_company);
+router.get('/view_claims_of_my_company',controller.authorise_company,controller.view_claims_of_my_company);
+
+
 router.use('*', controller.page_404);
 
 
