@@ -2,14 +2,14 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db_connection.js');
 
 
-const email_column = { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} };
+/*const email_column = { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} };
 const password_column = {type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} };
 const salt_column = {type: DataTypes.STRING(1000), allowNull: false};
 const name_column = { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} };
 const PhoneNo_column = {type: DataTypes.STRING, allowNull: false, validate: {isNumeric: true, len: [10,10], min:0}};
 const id_column = { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true };
 const text_column = {type: DataTypes.TEXT, allowNull: false};
-const money_column = { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} };
+const money_column = { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} };*/
 
 
 //creating user model
@@ -17,7 +17,7 @@ const user = sequelize.define('user', {
   email : { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} },
   password : { type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} },
   salt : { type: DataTypes.STRING(1000), allowNull: false},
-  name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} },
+  name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
   phoneno : {type: DataTypes.STRING, allowNull: false, validate: {isNumeric: true, len: [10,10], min:0}}
 }, {
   timestamps: false
@@ -41,11 +41,7 @@ const policy = sequelize.define('policy', {
   suminsured :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
   company_gstin : { type: DataTypes.STRING, validate: {isEmail: true}, references: {model: company ,key: 'company_gstin'}},
   exemptions : {type: DataTypes.TEXT, allowNull: false},
-  claim_settlement_ratio:{
-    type: DataTypes.DOUBLE,
-    allowNull: false,
-    validate: {isNumeric: true, isFloat: true, min:0}
-  }
+  claim_settlement_ratio : {type: DataTypes.DOUBLE,allowNull: false,validate: {isNumeric: true, isFloat: true, min:0, max:100}}
 }, {
   timestamps: false
 });
