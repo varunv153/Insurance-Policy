@@ -20,6 +20,9 @@ router.post('/buy', controller.authorise_user, controller.buypolicy);
 router.get('/viewmypolicies',controller.authorise_user,controller.view_my_policies);
 router.get('/policies', controller.viewpolicies);
 
+router.post('/claimpolicy',controller.authorise_user,controller.claim_my_policy);
+router.get('/viewmyclaims',controller.authorise_user,controller.viewmyclaims);
+
 router.use('*', controller.page_404);
 
 

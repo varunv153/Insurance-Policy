@@ -69,11 +69,9 @@ const claim = sequelize.define('claim', {
   claim_amount : { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
   hospital_name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
   city : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
-  claimstatus : { type: DataTypes.STRING, defaultValue: "unapproved", validate: {is: /^(approved|unapproved)$/}}
+  claimstatus : { type: DataTypes.STRING, allowNull: false, defaultValue: "unapproved", validate: {is: /^(approved|unapproved)$/}}
 },{
-  timestamps: true,
-  updatedAt: false,
-  createdAt: 'policypurchasedate'
+  timestamps: false
 });
 
 

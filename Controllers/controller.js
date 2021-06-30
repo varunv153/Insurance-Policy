@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const models = require('../Database/Models/models.js');
 var passwordValidator = require('password-validator');
+const { Op } = require("sequelize");
 
 const secret_user = "varun user secret key";
 const secret_company = "varun db user secret key";
@@ -148,16 +149,93 @@ async function view_my_policies(req,res)
 		}
 	});
 	res.json( result );
-};/*
+};
 async function claim_my_policy(req,res)
 {
-	const bond = await models.purchasedpolicy.findByPk(req.body.id);
-	if(!bond)
-		res.status(404).json({"Status":"Bond doesn't exist"});
-	if(bond.useremail != await jwt.decode(req.cookies.jwt))
-		res.status(401).json({"Status":"This bond doesn't belong to you"});
+	try
+	{
+		req.body.claimstatus = "unapproved";
+		const bond = await models.purchasedpolicy.findByPk(req.body.bondid);
+		if(!bond)
+			res.status(404).json({"Status":"Bond doesn't exist"});
+		if(bond.useremail != await jwt.decode(req.cookies.jwt))
+			res.status(401).json({"Status":"This bond doesn't belong to you"});
+		await models.claim.create(req.body);
+		res.json({"Status":"claim created"});
+	}
+	catch(err){
+		res.json({"Error":err});
+	}
+};
+async function viewmyclaims(req,res)
+{
+	try
+	{
+		const mybonds= await
+		models.purchasedpolicy.findAll({
+			where :{
+				useremail : await jwt.decode(req.cookies.jwt)
+			}
+		});
 
-};*/
+		const mybondsid =[];
+		for (let i = 0; i < mybonds.length; i++)
+			mybondsid[i] = mybonds[i].id;
+
+		const result = await 
+		models.claim.findAll({
+			where :
+			{
+				bondid : 
+				{
+					[Op.in]:mybondsid
+				}
+			}
+		});
+		res.json(result);
+	}
+	catch(err)
+	{
+		res.json({"Error":err});
+	}
+};/*
+async function view_policies_of_company(req,res)
+{
+	const mypolicies= await
+	models.purchasedpolicy.findAll({
+		where :{
+			useremail : await jwt.decode(req.cookies.jwt)
+		}
+	});
+	res.json(mypolicies);
+}
+async function approve_claims(req,res)
+{
+	const mypolicies = await view_policies_of_company();
+
+	const mybonds= await
+	models.purchasedpolicy.findAll({
+		where :{
+			useremail : await jwt.decode(req.cookies.jwt)
+		}
+	});
+
+	const mybondsid =[];
+	for (let i = 0; i < mybonds.length; i++)
+		mybondsid[i] = mybonds[i].id;
+
+	const result = await 
+	models.claim.findAll({
+		where :
+		{
+			bondid : 
+			{
+				[Op.in]:mybondsid
+			}
+		}
+	});
+	res.json(result);
+}*/
 function page_404(req,res)
 {
 	res.status(404).json({ error: 'Enter a valid URL' });
@@ -167,4 +245,4 @@ function page_404(req,res)
 module.exports = {signup_user, signup_company,
 				login_user,login_company,
 				authorise_user, authorise_company,
-				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy, page_404};
+				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy,viewmyclaims, page_404};
