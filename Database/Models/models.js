@@ -25,7 +25,7 @@ const user = sequelize.define('user', {
 
 //company company model
 const company = sequelize.define('company', {
-  company_gstin : { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} },
+  company_adminemail : { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} },
   company_name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} },
   password : { type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} },
   salt: { type: DataTypes.STRING(1000), allowNull: false}
@@ -39,7 +39,7 @@ const policy = sequelize.define('policy', {
   policywording : {type: DataTypes.TEXT, allowNull: false},
   roomrentcap :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
   suminsured :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
-  company_gstin : { type: DataTypes.STRING, validate: {isEmail: true}, references: {model: company ,key: 'company_gstin'}},
+  company_adminemail : { type: DataTypes.STRING, validate: {isEmail: true}, references: {model: company ,key: 'company_adminemail'}},
   exemptions : {type: DataTypes.TEXT, allowNull: false},
   claim_settlement_ratio : {type: DataTypes.DOUBLE,allowNull: false,validate: {isNumeric: true, isFloat: true, min:0, max:100}}
 }, {
@@ -62,6 +62,20 @@ const purchasedpolicy = sequelize.define('purchasedpolicy', {
   createdAt: 'policypurchasedate'
 });
 
+const claim = sequelize.define('claim', {
+  id : { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  bondid : { type: DataTypes.INTEGER, references: {model: purchasedpolicy ,key: 'id'} },
+  reason : {type: DataTypes.TEXT, allowNull: false},
+  claim_amount : { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
+  hospital_name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
+  city : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
+  claimstatus : { type: DataTypes.STRING, defaultValue: "unapproved", validate: {is: /^(approved|unapproved)$/}}
+},{
+  timestamps: true,
+  updatedAt: false,
+  createdAt: 'policypurchasedate'
+});
+
 
 
 //check if database is synced
@@ -71,4 +85,4 @@ const purchasedpolicy = sequelize.define('purchasedpolicy', {
   console.log("All models were synchronized successfully.");
 })();
 
-module.exports = {user, company, policy, purchasedpolicy};
+module.exports = {user, company, policy, purchasedpolicy,claim};

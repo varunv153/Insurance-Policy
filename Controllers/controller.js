@@ -2,39 +2,53 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const models = require('../Database/Models/models.js');
+var passwordValidator = require('password-validator');
+
+const secret_user = "varun user secret key";
+const secret_company = "varun db user secret key";
 
 //add a row to the user table when sign up
-async function signup_user(req,res)
+async function signup(req,res,db)
 {
 	try
 	{
-		req.body.salt = await bcrypt.genSalt();
 		if(!req.body.password)
 			throw('Password Required!');
-		const min_pass_length = 8;
-		if(req.body.password.length<min_pass_length)
-			throw( {"Password length should be a minimum" : min_pass_length } );
+
+		//defining password schema
+		var pwd_schema = new passwordValidator();
+		pwd_schema
+		.is().min(8)                                    // Minimum length 8
+		.is().max(100)                                  // Maximum length 100
+		.has().uppercase()                              // Must have uppercase letters
+		.has().lowercase()                              // Must have lowercase letters
+		.has().digits(2)                                // Must have at least 2 digits
+		.has().not().spaces()                           // Should not have spaces
+		.is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
+		//finish defining password schema
+
+		if(!pwd_schema.validate(req.body.password))
+			throw( pwd_schema.validate(req.body.password, { list: true } ) );
+
+		req.body.salt = await bcrypt.genSalt();
 		req.body.password = await bcrypt.hash(req.body.password, req.body.salt);
 
-		await models.user.create(req.body);
-		console.log('User was saved to the database!');
-
-		await models.company.create({company_gstin:req.body.email, password:req.body.password,salt:req.body.salt,company_name:req.body.name});
-		console.log('Company was saved to the database!');
+		await db.create(req.body);
+		console.log(db,'was saved to the database!');
 
 		res.json({signup_status:'success'});
 	}
 	catch(err){
 		res.status(400).json({"Error" : err});
 	}
-};
-async function login_post(req,res)
+}
+async function login(req,res,db,secret)
 {
-	var valid_user = await models.user.findByPk(req.body.email);
+	var valid_user = await db.findByPk(req.body.email);
 	if (valid_user) {
 		const auth = await bcrypt.compare(req.body.password, valid_user.password);
 		if (auth) {
-			const jwt_token =jwt.sign(req.body.email, 'varun secret jwt key');
+			const jwt_token =jwt.sign(req.body.email, secret);
 			res.cookie('jwt', jwt_token);
 			res.json({"login_status": "You are logged in"});
 		}
@@ -43,16 +57,16 @@ async function login_post(req,res)
 		}
 	}
 	else{
-		res.status(404).json({"login_status":"This user does not exist"});
+		res.status(404).json({"login_status":"Does not exist"});
 	}
 };
-async function authorise(req,res,next)
+async function authorise(req,res,db,secret,next)
 {
 	if (req.cookies.jwt)
 	{
-		jwt.verify(req.cookies.jwt, 'varun secret jwt key', (err, decodedToken) => {
+		jwt.verify(req.cookies.jwt, secret, (err, decodedToken) => {
 			if (err) {
-				res.status(401).json({"Error": 'Not Authorised, please login'});
+				res.status(401).json({"Error": 'Not Authorised'});
 			}
 			else {
 				next();
@@ -60,8 +74,35 @@ async function authorise(req,res,next)
 		});
 	}
 	else {
-		res.status(401).json({"Error" : 'Not Authorised, please login'});
+		res.status(401).json({"Error" : 'Not Authorised'});
 	}
+};
+
+
+async function signup_user(req,res)
+{
+	signup(req,res,models.user);
+};
+async function signup_company(req,res)
+{
+	signup(req,res,models.company);
+};
+
+async function login_user(req,res)
+{
+	login(req,res,models.user,secret_user);
+};
+async function login_company(req,res)
+{
+	login(req,res,models.company,secret_company);
+};
+async function authorise_user(req,res,next)
+{
+	authorise(req,res,models.user,secret_user,next);
+};
+async function authorise_company(req,res,next)
+{
+	authorise(req,res,models.company,secret_company,next);
 };
 async function logout(req,res)
 {
@@ -73,7 +114,7 @@ async function createpolicy(req,res)
 {
 	try
 	{
-		req.body.company_gstin = await jwt.decode(req.cookies.jwt);
+		req.body.company_adminemail = await jwt.decode(req.cookies.jwt);
 		await models.policy.create(req.body);
 		res.json({"Policy_Status" : 'Policy was saved to the database!'});
 	}
@@ -98,10 +139,32 @@ async function buypolicy(req,res)
 		res.status(400).json({'Error' : err});
 	}
 };
+async function view_my_policies(req,res)
+{
+	const result = await
+	models.purchasedpolicy.findAll({
+		where :{
+			useremail : await jwt.decode(req.cookies.jwt)
+		}
+	});
+	res.json( result );
+};/*
+async function claim_my_policy(req,res)
+{
+	const bond = await models.purchasedpolicy.findByPk(req.body.id);
+	if(!bond)
+		res.status(404).json({"Status":"Bond doesn't exist"});
+	if(bond.useremail != await jwt.decode(req.cookies.jwt))
+		res.status(401).json({"Status":"This bond doesn't belong to you"});
+
+};*/
 function page_404(req,res)
 {
 	res.status(404).json({ error: 'Enter a valid URL' });
 };
 
 
-module.exports = {signup_user, login_post,authorise, logout, createpolicy, viewpolicies, buypolicy, page_404};
+module.exports = {signup_user, signup_company,
+				login_user,login_company,
+				authorise_user, authorise_company,
+				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy, page_404};
