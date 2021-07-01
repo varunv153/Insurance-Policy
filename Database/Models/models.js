@@ -2,45 +2,45 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db_connection.js');
 
 
-/*const email_column = { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} };
-const password_column = {type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} };
-const salt_column = {type: DataTypes.STRING(1000), allowNull: false};
-const name_column = { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} };
-const PhoneNo_column = {type: DataTypes.STRING, allowNull: false, validate: {isNumeric: true, len: [10,10], min:0}};
-const id_column = { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true };
-const text_column = {type: DataTypes.TEXT, allowNull: false};
-const money_column = { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} };*/
+function email_column(){ return{ type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} }};
+function password_column(){ return{type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} }};
+function salt_column(){ return{type: DataTypes.STRING(1000), allowNull: false}};
+function name_column(){ return{ type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} }};
+function PhoneNo_column(){ return{type: DataTypes.STRING, allowNull: false, validate: {isNumeric: true, len: [10,10], min:0}}};
+function id_column(){ return{ type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true }};
+function text_column(){ return{type: DataTypes.TEXT, allowNull: false}};
+function money_column(){ return{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} }};
 
 
 //creating user model
 const user = sequelize.define('user', {
-  email : { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} },
-  password : { type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} },
-  salt : { type: DataTypes.STRING(1000), allowNull: false},
-  name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
-  phoneno : {type: DataTypes.STRING, allowNull: false, validate: {isNumeric: true, len: [10,10], min:0}}
+  email : email_column(),
+  password : password_column(),
+  salt : salt_column(),
+  name : name_column(),
+  phoneno : PhoneNo_column()
 }, {
   timestamps: false
 });
 
 //company company model
 const company = sequelize.define('company', {
-  company_adminemail : { type: DataTypes.STRING, primaryKey: true, validate: {isEmail: true} },
-  company_name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} },
-  password : { type: DataTypes.STRING, allowNull: false, validate: {len: [8,255]} },
-  salt: { type: DataTypes.STRING(1000), allowNull: false}
+  company_adminemail : email_column(),
+  company_name : name_column(),
+  password : password_column(),
+  salt: salt_column()
 }, {
   timestamps: false
 });
 
 //creating policy model
 const policy = sequelize.define('policy', {
-  id : { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  policywording : {type: DataTypes.TEXT, allowNull: false},
-  roomrentcap :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
-  suminsured :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
+  id : id_column(),
+  policywording : text_column(),
+  roomrentcap :money_column(),
+  suminsured :money_column(),
   company_adminemail : { type: DataTypes.STRING, validate: {isEmail: true}, references: {model: company ,key: 'company_adminemail'}},
-  exemptions : {type: DataTypes.TEXT, allowNull: false},
+  exemptions : money_column(),
   claim_settlement_ratio : {type: DataTypes.DOUBLE,allowNull: false,validate: {isNumeric: true, isFloat: true, min:0, max:100}}
 }, {
   timestamps: false
@@ -48,14 +48,14 @@ const policy = sequelize.define('policy', {
 
 //purchased policies model
 const purchasedpolicy = sequelize.define('purchasedpolicy', {
-  id : { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id : id_column(),
   useremail : { type: DataTypes.STRING, validate: {isEmail: true}, references: {model: user ,key: 'email'} },
   policyid : {type: DataTypes.INTEGER,allowNull: false,references: {model: policy,key: 'id'}},
-  policyholdername : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/} },
-  policyholderage : { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
-  policyage : { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
-  preexistingdiseases : {type: DataTypes.TEXT, allowNull: false},
-  premium :{ type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} }  
+  policyholdername : name_column(),
+  policyholderage : money_column(),
+  policyage : money_column(),
+  preexistingdiseases : text_column(),
+  premium :money_column()  
 }, {
   timestamps: true,
   updatedAt: false,
@@ -63,12 +63,12 @@ const purchasedpolicy = sequelize.define('purchasedpolicy', {
 });
 
 const claim = sequelize.define('claim', {
-  id : { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  id : id_column(),
   bondid : { type: DataTypes.INTEGER, references: {model: purchasedpolicy ,key: 'id'} },
-  reason : {type: DataTypes.TEXT, allowNull: false},
-  claim_amount : { type: DataTypes.INTEGER, allowNull: false, validate: {isNumeric: true, min:1} },
-  hospital_name : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
-  city : { type: DataTypes.STRING, allowNull: false, validate: {is: /^([a-z]| |[A-Z])*$/ , len: [2,255]} },
+  reason : text_column(),
+  claim_amount : money_column(),
+  hospital_name : name_column(),
+  city : name_column(),
   claimstatus : { type: DataTypes.STRING, allowNull: false, defaultValue: "unapproved", validate: {is: /^(approved|unapproved)$/}}
 },{
   timestamps: false
