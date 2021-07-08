@@ -1,0 +1,444 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Policy Bazaar",
+    "description": "A website where a user can buy health insurances from different companies and also claim their insurance. A company admin can create insurance from his company, manage the bonds issued and address claims",
+    "contact": {
+      "email": "varun.v@bobble.ai"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Company Access",
+      "description": "APIs related to company signup, login, creating policies"
+    },
+    {
+      "name": "User Access",
+      "description": "APIs related to user signup, login, buying policies, profile management"
+    }
+  ],
+  "paths": {
+    "/signup_company": {
+      "post": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "Signup as a company",
+        "requestBody": {
+          "description": "Company details needed to signup",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/login_company": {
+      "post": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "Login as a company",
+        "requestBody": {
+          "description": "Company details needed to login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/createpolicy": {
+      "post": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "Create a policy as a company",
+        "requestBody": {
+          "description": "Details of the policy needed to be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/company"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/view_policies_of_my_company": {
+      "get": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "View policies created by my company",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/logout_company": {
+      "get": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "Logout my company account",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/signup_user": {
+      "post": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "Signup as a user",
+        "requestBody": {
+          "description": "User details needed to signup",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/login_user": {
+      "post": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "Login as a user",
+        "requestBody": {
+          "description": "User details needed to login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/policies": {
+      "get": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "View all policies created",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/buy": {
+      "post": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "Buy a policy",
+        "requestBody": {
+          "description": "PolicyId which user wishes to buy",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/viewmypolicies": {
+      "get": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "View all policies user has bought",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/claimpolicy": {
+      "post": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "Register a claim against a policy user owns",
+        "requestBody": {
+          "description": "Claim details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/viewmyclaims": {
+      "get": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "View all claims against logged in user",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/logout_user": {
+      "get": {
+        "tags": [
+          "User Access"
+        ],
+        "summary": "Logout user",
+        "responses": {
+          "400": {
+            "description": "Invalid input",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "salt": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phoneno": {
+            "type": "string"
+          }
+        }
+      },
+      "company": {
+        "type": "object",
+        "properties": {
+          "company_adminemail": {
+            "type": "string"
+          },
+          "company_name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "salt": {
+            "type": "string"
+          }
+        }
+      },
+      "policy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "policywording": {
+            "type": "string"
+          },
+          "roomrentcap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "suminsured": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "company_adminemail": {
+            "type": "string"
+          },
+          "exemptions": {
+            "type": "string"
+          },
+          "claim_settlement_ratio": {
+            "type": "string"
+          }
+        }
+      },
+      "purchasedpolicy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "useremail": {
+            "type": "string"
+          },
+          "policyid": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "policyholdername": {
+            "type": "string"
+          },
+          "policyholderage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "policyage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "preexistingdiseases": {
+            "type": "string"
+          },
+          "premium": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "claim": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "bondid": {
+            "type": "integer"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "claim_amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hospital_name": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "claimstatus": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
