@@ -1,0 +1,327 @@
+swagger: "2.0"
+info:
+  title: "Policy Bazaar"
+  description: "A website where a user can buy health insurances from different companies and also claim their insurance. A company admin can create insurance from his company, manage the bonds issued and address claims"
+  contact:
+    email: "varun.v@bobble.ai"
+  version: "1.0.0"
+
+host: localhost:3000
+basePath: /api-references
+
+tags:
+- name: "Company Access"
+  description: "APIs related to company signup, login, creating policies"
+- name: "User Access"
+  description: "APIs related to user signup, login, buying policies, profile management"
+schemes:
+- "http"
+paths:
+  /signup_company:
+    post:
+      tags:
+      - "Company Access"
+      summary: "Signup as a company"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Company details needed to signup"
+        required: true
+        schema:
+          $ref: "#/definitions/company"
+      responses:
+        "400":
+          description: "Invalid input"
+  /login_company:
+    post:
+      tags:
+      - "Company Access"
+      summary: "Login as a company"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Company details needed to login"
+        required: true
+        schema:
+          $ref: "#/definitions/company"
+      responses:
+        "400":
+          description: "Invalid input"
+  /createpolicy:
+    post:
+      tags:
+      - "Company Access"
+      summary: "Create a policy as a company"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Details of the policy needed to be created"
+        required: true
+        schema:
+          $ref: "#/definitions/company"
+      responses:
+        "400":
+          description: "Invalid input"
+          
+  /view_policies_of_my_company:
+    get:
+      tags:
+      - "Company Access"
+      summary: "View policies created by my company"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+  /logout_company:
+    get:
+      tags:
+      - "Company Access"
+      summary: "Logout my company account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+  
+  /signup_user:
+    post:
+      tags:
+      - "User Access"
+      summary: "Signup as a user"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User details needed to signup"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        "400":
+          description: "Invalid input"
+  /login_user:
+    post:
+      tags:
+      - "User Access"
+      summary: "Login as a user"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User details needed to login"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        "400":
+          description: "Invalid input"
+          
+  /policies:
+    get:
+      tags:
+      - "User Access"
+      summary: "View all policies created"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+  /buy:
+    post:
+      tags:
+      - "User Access"
+      summary: "Buy a policy"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "PolicyId which user wishes to buy"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        "400":
+          description: "Invalid input"
+  /viewmypolicies:
+    get:
+      tags:
+      - "User Access"
+      summary: "View all policies user has bought"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+  /claimpolicy:
+    post:
+      tags:
+      - "User Access"
+      summary: "Register a claim against a policy user owns"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Claim details"
+        required: true
+        schema:
+          $ref: "#/definitions/user"
+      responses:
+        "400":
+          description: "Invalid input"
+  /viewmyclaims:
+    get:
+      tags:
+      - "User Access"
+      summary: "View all claims against logged in user"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+  /logout_user:
+    get:
+      tags:
+      - "User Access"
+      summary: "Logout user"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "400":
+          description: "Invalid input"
+          
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  user:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+        format: "password"
+      salt:
+        type: "string"
+      name:
+        type: "string"
+      phoneno:
+        type: "string"
+  company:
+    type: "object"
+    properties:
+      company_adminemail:
+        type: "string"
+      company_name:
+        type: "string"
+      password:
+        type: "string"
+        format: "password"
+      salt:
+        type: "string"
+  policy:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      policywording:
+        type: "string"
+      roomrentcap:
+        type: "integer"
+        format: "int32"
+      suminsured:
+        type: "integer"
+        format: "int32"
+      company_adminemail:
+        type: "string"
+      exemptions:
+        type: "string"
+      claim_settlement_ratio:
+        type: "string"
+  purchasedpolicy:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      useremail:
+        type: "string"
+      policyid:
+        type: "integer"
+        format: "int32"
+      policyholdername:
+        type: "string"
+      policyholderage:
+        type: "integer"
+        format: "int32"
+      policyage:
+        type: "integer"
+        format: "int32"
+      preexistingdiseases:
+        type: "string"
+      premium:
+        type: "integer"
+        format: "int32"
+  claim:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      bondid:
+        type: "integer"
+      reason:
+        type: "string"
+      claim_amount:
+        type: "integer"
+        format: "int32"
+      hospital_name:
+        type: "string"
+      city:
+        type: "string"
+      claimstatus:
+        type: "string"

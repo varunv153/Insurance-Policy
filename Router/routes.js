@@ -1,10 +1,18 @@
 const express = require('express');
+const router = express.Router();
 const controller = require('../Controllers/controller.js')
 const middleware = require('../Middlewares/middleware.js');
-const router = express.Router();
 
 router.use(middleware);
 
+/**
+* @openapi
+* /signup_company:
+*  post:
+*    summary : Hello
+*    parameters:
+*    
+*/
 router.post('/signup_company',controller.signup_company);
 router.post('/login_company',controller.login_company);
 

@@ -16,6 +16,9 @@
     "mysql2": "^2.2.5",
     "node-gyp": "^8.1.0",
     "password-validator": "^5.1.1",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui": "^3.51.1",
+    "swagger-ui-express": "^4.1.6"
   }
 }
