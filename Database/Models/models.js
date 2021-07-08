@@ -27,7 +27,7 @@ const user = sequelize.define('user', {
 
 //company company model
 const company = sequelize.define('company', {
-  company_adminemail : email_pk_column(),
+  email : email_pk_column(),
   company_name : name_column(),
   password : password_column(),
   salt: salt_column()
@@ -41,7 +41,7 @@ const policy = sequelize.define('policy', {
   policywording : text_column(),
   roomrentcap :money_column(),
   suminsured :money_column(),
-  company_adminemail : Object.assign({},email_column(),{references: {model: company ,key: 'company_adminemail'}}),
+  company_adminemail : Object.assign({},email_column(),{references: {model: company ,key: 'email'}}),
   exemptions : text_column(),
   claim_settlement_ratio : {type: DataTypes.DOUBLE,allowNull: false,validate: {isNumeric: true, isFloat: true, min:0, max:100}}
 }, {
