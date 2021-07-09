@@ -42,6 +42,10 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Signup Successful",
+            "content": {}
+          },
           "400": {
             "description": "Invalid input",
             "content": {}
@@ -72,8 +76,16 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Login Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Wrong Password",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist",
             "content": {}
           }
         },
@@ -105,8 +117,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Creation Successful",
+            "content": {}
+          },
           "400": {
             "description": "Invalid input",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
             "content": {}
           }
         },
@@ -120,8 +140,30 @@
         ],
         "summary": "View policies created by my company",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "View Request Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/view_claims_of_my_company": {
+      "get": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "View claims associated to my company",
+        "responses": {
+          "200": {
+            "description": "View Request Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
             "content": {}
           }
         }
@@ -134,8 +176,12 @@
         ],
         "summary": "Logout my company account",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Logout Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
             "content": {}
           }
         }
@@ -159,6 +205,10 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Signup Successful",
+            "content": {}
+          },
           "400": {
             "description": "Invalid input",
             "content": {}
@@ -189,8 +239,16 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Login Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Wrong Password",
+            "content": {}
+          },
+          "404": {
+            "description": "User doesn't exist",
             "content": {}
           }
         },
@@ -204,8 +262,8 @@
         ],
         "summary": "View all policies created",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Request Successful",
             "content": {}
           }
         }
@@ -223,17 +281,22 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/purchasedpolicy"
-              },
-              "example": {
-                "id": 1
               }
             }
           },
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Transaction Successful",
+            "content": {}
+          },
           "400": {
             "description": "Invalid input",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised Input",
             "content": {}
           }
         },
@@ -247,8 +310,12 @@
         ],
         "summary": "View all policies user has bought",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "View Request Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised Input",
             "content": {}
           }
         }
@@ -272,8 +339,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Claim Request Successful Created",
+            "content": {}
+          },
           "400": {
             "description": "Invalid input",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised Input",
             "content": {}
           }
         },
@@ -287,8 +362,12 @@
         ],
         "summary": "View all claims against logged in user",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "View Request Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised Input",
             "content": {}
           }
         }
@@ -301,8 +380,12 @@
         ],
         "summary": "Logout user",
         "responses": {
-          "400": {
-            "description": "Invalid input",
+          "200": {
+            "description": "Logout Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
             "content": {}
           }
         }
@@ -357,7 +440,7 @@
         },
         "example": {
           "email": "test1@company1.com",
-          "company_name": "testcompany1",
+          "company_name": "testcompany",
           "password": "password"
         }
       },
@@ -420,6 +503,13 @@
             "type": "integer",
             "format": "int32"
           }
+        },
+        "example": {
+          "policyid": 1,
+          "policyholdername": "Mamatha",
+          "policyholderage": 55,
+          "policyage": 2,
+          "preexistingdiseases": "Diabetes"
         }
       },
       "claim": {

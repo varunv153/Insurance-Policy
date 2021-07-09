@@ -131,8 +131,9 @@ async function buypolicy(req,res)
 {
 	try
 	{
+		const policy_req = await models.policy.findByPk(req.body.policyid);
 		req.body.useremail = await jwt.decode(req.cookies.jwt);
-		req.body.premium = req.body.policyholderage*1000*req.body.policyage;
+		req.body.premium = policy_req.suminsured*req.body.policyholderage*req.body.policyage/1000;
 		await models.purchasedpolicy.create(req.body);
 		res.json({"Purchase_Status":'Policy bought!'});
 	}
