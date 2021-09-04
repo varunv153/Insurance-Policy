@@ -8,7 +8,7 @@ const swaggerDocs = require('./openapi.json');
 app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 //app settings
-port = process.env.PORT || 3000;
+port = process.env.PORT || 3001;
 
 app.use(routes);
 

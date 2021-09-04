@@ -10,6 +10,7 @@ router.post('/login_company',controller.login_company);
 router.post('/createpolicy',controller.authorise_company,controller.createpolicy);
 router.get('/view_policies_of_my_company',controller.authorise_company,controller.view_policies_of_my_company);
 router.get('/view_claims_of_my_company',controller.authorise_company,controller.view_claims_of_my_company);
+router.get('/view_bonds_of_my_company',controller.authorise_company,controller.view_bonds_of_my_company);
 
 router.get('/logout_company', controller.authorise_company, controller.logout);
 

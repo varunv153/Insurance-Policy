@@ -40,7 +40,7 @@ async function signup(req,res,db)
 		res.json({signup_status:'success'});
 	}
 	catch(err){
-		res.status(400).json({"Error" : err});
+		res.status(400).json({"signup_status" : err});
 	}
 }
 async function login(req,res,db,secret)
@@ -82,6 +82,7 @@ async function authorise(req,res,db,secret,next)
 
 async function signup_user(req,res)
 {
+	console.log("got request for signup user")
 	signup(req,res,models.user);
 };
 async function signup_company(req,res)
@@ -210,6 +211,30 @@ async function view_policies_of_my_company(req,res)
 	});
 	res.json(mypolicies);
 }
+async function view_bonds_of_my_company(req,res)
+{
+	const mypolicies= await
+	models.policy.findAll({
+		where :{
+			company_adminemail : await jwt.decode(req.cookies.jwt)
+		}
+	});
+	const mypolicyid =[];
+	for (let i = 0; i < mypolicies.length; i++)
+		mypolicyid[i] = mypolicies[i].id;
+
+	const mybonds= await
+	models.purchasedpolicy.findAll({
+		where :
+		{
+			policyid : 
+			{
+				[Op.in]:mypolicyid
+			}
+		}
+	});
+	res.json(mybonds)
+}
 async function view_claims_of_my_company(req,res)
 {
 	try
@@ -268,4 +293,4 @@ module.exports = {signup_user, signup_company,
 				login_user,login_company,
 				authorise_user, authorise_company,
 				logout, createpolicy, viewpolicies, buypolicy, view_my_policies, claim_my_policy,viewmyclaims, 
-				view_policies_of_my_company, view_claims_of_my_company, page_404};
+				view_policies_of_my_company, view_bonds_of_my_company, view_claims_of_my_company, page_404};

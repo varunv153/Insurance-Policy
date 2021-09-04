@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/"
+      "url": "http://localhost:3001/"
     }
   ],
   "tags": [
@@ -139,6 +139,24 @@
           "Company Access"
         ],
         "summary": "View policies created by my company",
+        "responses": {
+          "200": {
+            "description": "View Request Successful",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorised input",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/view_bonds_of_my_company": {
+      "get": {
+        "tags": [
+          "Company Access"
+        ],
+        "summary": "View bonds belonging to my company",
         "responses": {
           "200": {
             "description": "View Request Successful",
